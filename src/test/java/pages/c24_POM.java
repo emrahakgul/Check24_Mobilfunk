@@ -1,19 +1,11 @@
 package pages;
-
-
 import org.openqa.selenium.By;
-
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-
-
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import utilities.ParentClass;
-
-import java.util.ArrayList;
 import java.util.List;
-
 public class c24_POM extends ParentClass {
 
     By acceptCookies = By.xpath("(//a[@class='c24-cookie-consent-button'])[1]");
@@ -23,19 +15,15 @@ public class c24_POM extends ParentClass {
     By minutesInk = By.xpath("//select[@id='minutes_included']");
     By laufzeit = By.xpath("//select[@id='select_contract']");
     By handyHnzfgn = By.xpath("//a[@class='change-to-bundle-link']");
-    By iphone10Pro = By.xpath("//a[@class='link ng-star-inserted']");
+    By iphone12 = By.xpath("//a[@class='link ng-star-inserted']");
     By sortierenPreisMonat = By.xpath("(//div[@class='label'])[5]");
-
-    By leftLabelTelekom = By.xpath("(//input[@class='input checked'])[1]");
-    By leftLabelO2 = By.xpath("(//input[@class='input checked'])[3]");
     By leftLabel30GB = By.xpath("(//*[@class='value-label col-3 _internal_tooltip_disabled_ _internal_tooltip_applied_ ng-star-inserted'])[8]");
     By leftLabel10 = By.xpath("(//*[@class='value-label col-3 _internal_tooltip_disabled_ _internal_tooltip_applied_ ng-star-inserted'])[11]");
-    By backToTop = By.xpath("(//div[@class='label'])[10]");
 
 
     List<WebElement> c24NavTabs;
     List<WebElement> tariffPriceList;
-  //  List<WebElement> handyList;
+    //  List<WebElement> handyList;
 
     Actions buiilder = new Actions(driver);
 
@@ -46,6 +34,8 @@ public class c24_POM extends ParentClass {
         //clickTo(acceptButton);
         waiting(1000);
         clickTo(acceptCookies);
+        waiting(4000);
+        Assert.assertEquals(driver.getCurrentUrl(), "https://www.check24.de/");
     }
 
     public void goToHandyPage() {
@@ -59,6 +49,9 @@ public class c24_POM extends ParentClass {
             if (tabElement.getAttribute("title").equalsIgnoreCase("handy")) {
                 System.out.println(tabElement.getAttribute("title"));
                 tabElement.click();
+
+                waiting(2000);
+                Assert.assertTrue(driver.getTitle().contains("Smartphone Tarife"));
 
                 waiting(2000);
                 break;
@@ -84,51 +77,61 @@ public class c24_POM extends ParentClass {
 
         clickTo(submitButton);
         waiting(5000);
+
+        Assert.assertTrue(driver.getTitle().contains("ohne Handy"));
+
     }
 
-    public void addAMobilePhone()
-    {
-
+    public void addAMobilePhone() {
 
 
         clickTo(handyHnzfgn);
-waiting(3000);
+        waiting(3000);
 
-clickTo(iphone10Pro);
-waiting(4000);
-
-clickTo(sortierenPreisMonat);
-waiting(4000);
-        }
-
-        public void checkTheTariffs()
-        {
-          //  By backToTop = By.xpath("(//div[@class='label'])[10]");
-            By tarifPreis = By.xpath("//*[@class='price-container']/dd");
-            tariffPriceList=getElements(tarifPreis);
+        Assert.assertTrue(driver.getTitle().contains("Handyfinder"));
 
 
+        clickTo(iphone12);
+        waiting(4000);
+
+        Assert.assertTrue(driver.getTitle().contains("mit Vertrag"));
 
 
-            clickTo(leftLabel30GB);waiting(2000);
-            clickTo(leftLabel10);waiting(5000);
+        clickTo(sortierenPreisMonat);
+        waiting(4000);
+    }
+
+    public void checkTheTariffs() {
+        //  By backToTop = By.xpath("(//div[@class='label'])[10]");
+        By tarifPreis = By.xpath("//*[@class='price-container']/dd");
+        tariffPriceList = getElements(tarifPreis);
+
+        clickTo(leftLabel30GB);
+        waiting(2000);
+        clickTo(leftLabel10);
+        waiting(5000);
 
 
+        int size = 5;  //tariffPriceList.size();
 
-
-            int size=5;  //tariffPriceList.size();
-
-            for (int i = 0; i <size ; i++) {
-
-
-
-                List<WebElement> listingWebElementListInLoop = driver.findElements(By.xpath("//*[@class='price-container']/dd"));
-                String preises=listingWebElementListInLoop.get(i).getText();
-
-               int price=Integer.parseInt(preises.substring(0, 1));
-
+        for (int i = 0; i < size; i++) {
+            if (i + 1 == 5) {
+                break;
             }
+            List<WebElement> listingWebElementListInLoop = driver.findElements(By.xpath("//*[@class='price-container']/dd"));
+            String preises = listingWebElementListInLoop.get(i).getText();
+            int price = Integer.parseInt(preises.substring(0, 2));
+            int nextPrice = Integer.parseInt(listingWebElementListInLoop.get(i + 1).getText().substring(0, 2));
+            int ii = i + 1;
+            if (price <= nextPrice) {
+                System.out.println(i + ". price: " + price + "___" + ii + ". price: " + nextPrice);
+                System.out.println("The order of the prices is correct.");
+            } else
+                System.out.println("The order of the prices is NOT correct.");
+
+
         }
-        }
+    }
+}
 
 
