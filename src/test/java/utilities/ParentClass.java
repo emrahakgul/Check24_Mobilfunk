@@ -14,9 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+
 public class ParentClass {
-    protected WebDriver driver;
-    protected WebDriverWait wait;
+
+
+    public WebDriver driver;
+    public WebDriverWait wait;
 
 
     /**
@@ -26,8 +29,8 @@ public class ParentClass {
         System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE,"true");
         System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
         driver = Driver.getDriver();
-        wait = new WebDriverWait(driver, 3);
-        setImplicitlyWaitTimeoutTo(3);
+        wait = new WebDriverWait(driver, 30);
+        setImplicitlyWaitTimeoutTo(10);
     }
 
     public void setImplicitlyWaitTimeoutTo(int timeSeconds) {
